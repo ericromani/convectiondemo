@@ -8,6 +8,7 @@ module Templates
       network '10.10.10.0/23'
       tag 'Name', "#{stack.cloud}-#{stack.name}"
       enable_dns true
+      add_route_table 'InternetGateway', gateway_route: true
     end
 
     ec2_subnet 'PrivateSubnet' do
@@ -50,6 +51,10 @@ module Templates
       src_dst_checks false
     end
 
+    ec2_subnet_route_table_association 'DemoVPCRouteTable' do
+      route_table fn_ref('DemoVPCTableInternetGateway')
+      subnet fn_ref('PublicSubnet')
+    end
 
   end
 end
